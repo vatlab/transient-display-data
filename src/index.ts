@@ -8,7 +8,8 @@ import { ICommandPalette } from '@jupyterlab/apputils';
 import {
   CodeConsole,
   ConsolePanel,
-  IConsoleTracker
+  IConsoleTracker,
+  TransientHandler
 } from '@jupyterlab/console';
 
 import { AttachedProperty } from '@phosphor/properties';
