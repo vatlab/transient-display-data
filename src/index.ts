@@ -16,8 +16,96 @@ import { AttachedProperty } from '@phosphor/properties';
 
 import { ReadonlyJSONObject } from '@phosphor/coreutils';
 
-/**
- * The console widget tracker provider.
+ /**
+  * The console widget tracker provider.
+  */
+ export const transient: JupyterLabPlugin<void> = {
+   id: '@jupyterlab/console-extension:transient',
+   requires: [IConsoleTracker, ICommandPalette],
+   activate: activateTransient,
+   autoStart: true
+ };
+
+ export default transient;
+
+ function activateTransient(
+   app: JupyterLab,
+   tracker: IConsoleTracker,
+   palette: ICommandPalette
+ ) {
+   tracker.widgetAdded.connect((sender, panel) => {
+     const console = panel.console;
+
+     const handler = new TransientHandler({
+       session: console.session,
+       parent: console
+     });
+     Private.transientHandlerProperty.set(console, handler);
+     console.disposed.connect(() => {
+       handler.dispose();
+     });
+   });
+
+   const { commands, shell } = app;
+   const category = 'Console';
+   const toggleShowAllActivity = 'console:toggle-show-all-kernel-activity';
+
+   // Get the current widget and activate unless the args specify otherwise.
+   function getCurrent(args: ReadonlyJSONObject): ConsolePanel | null {
+     let widget = tracker.currentWidget;
+     let activate = args['activate'] !== false;
+     if (activate && widget) {
+       shell.activateById(widget.id);
+     }
+     return widget;
+   }
+
+   commands.addCommand(toggleShowAllActivity, {
+     label: args => 'Show All Kernel Activity',
+     execute: args => {
+       let current = getCurrent(args);
+       if (!current) {
+         return;
+       }
+       const handler = Private.transientHandlerProperty.get(current.console);
+       handler.enabled = !handler.enabled;
+     },
+     isToggled: () =>
+       tracker.currentWidget !== null &&
+       Private.transientHandlerProperty.get(tracker.currentWidget.console).enabled,
+     isEnabled: () =>
+       tracker.currentWidget !== null &&
+       tracker.currentWidget === app.shell.currentWidget
+   });
+
+   palette.addItem({
+     command: toggleShowAllActivity,
+     category,
+     args: { isPalette: true }
+   });
+
+   app.contextMenu.addItem({
+     command: toggleShowAllActivity,
+     selector: '.jp-CodeConsole'
+   });
+ }
+
+ /*
+  * A namespace for private data.
+  */
+ namespace Private {
+   /**
+    * An attached property for a console's transient handler.
+    */
+   export const transientHandlerProperty = new AttachedProperty<
+     CodeConsole,
+     TransientHandler | undefined
+   >({
+     name: 'transientHandler',
+     create: () => undefined
+   });
+ }
+tracker provider.
  */
 export const Transient: JupyterLabPlugin<void> = {
   id: '@jupyterlab/console-extension:Transient',
