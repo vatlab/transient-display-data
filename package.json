@@ -1,5 +1,5 @@
 {
-  "name": "transient-display-message",
+  "name": "transient-display-data",
   "version": "0.1.0",
   "description": "Extension to display transient_display_data in Jupyter Lab",
   "keywords": [
@@ -7,9 +7,9 @@
     "jupyterlab",
     "jupyterlab-extension"
   ],
-  "homepage": "https://github.com/vatlab/transient-display-message",
+  "homepage": "https://github.com/vatlab/transient-display-data",
   "bugs": {
-    "url": "https://github.com/vatlab/transient-display-message/issues"
+    "url": "https://github.com/vatlab/transient-display-data/issues"
   },
   "license": "BSD-3-Clause",
   "author": "Bo Peng",
@@ -21,7 +21,7 @@
   "types": "lib/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vatlab/transient-display-message.git"
+    "url": "https://github.com/vatlab/transient-display-data.git"
   },
   "scripts": {
     "build": "tsc",
