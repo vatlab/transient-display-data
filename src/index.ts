@@ -1,7 +1,10 @@
 // Copyright (c) Jupyter Development Team.
 // Distributed under the terms of the Modified BSD License.
 
-import { JupyterLabPlugin, JupyterLab } from '@jupyterlab/application';
+import {
+  JupyterFrontEnd,
+  JupyterFrontEndPlugin
+} from '@jupyterlab/application';
 
 import { ICommandPalette } from '@jupyterlab/apputils';
 
@@ -12,7 +15,7 @@ import {
 } from '@jupyterlab/console';
 
 import {
-  TransientHandler
+    TransientHandler
 } from './transient';
 
 import { AttachedProperty } from '@phosphor/properties';
@@ -22,9 +25,10 @@ import { ReadonlyJSONObject } from '@phosphor/coreutils';
 /**
  * The console widget tracker provider.
  */
-export const transient: JupyterLabPlugin<void> = {
-  id: '@jupyterlab/console-extension:transient',
-  requires: [IConsoleTracker, ICommandPalette],
+export const transient: JupyterFrontEndPlugin<void> = {
+  id: 'vatlab/jupyterlab-extension:transient',
+  requires: [IConsoleTracker],
+  optional: [ICommandPalette],
   activate: activateTransient,
   autoStart: true
 };
@@ -32,10 +36,11 @@ export const transient: JupyterLabPlugin<void> = {
 export default transient;
 
 function activateTransient(
-  app: JupyterLab,
+  app: JupyterFrontEnd,
   tracker: IConsoleTracker,
-  palette: ICommandPalette
+  palette: ICommandPalette | null
 ) {
+  const { shell } = app;
   tracker.widgetAdded.connect((sender, panel) => {
     const console = panel.console;
 
@@ -49,7 +54,7 @@ function activateTransient(
     });
   });
 
-  const { commands, shell } = app;
+  const { commands } = app;
   const category = 'Console';
   const toggleShowTransientMessage = 'console:toggle-show-transient-message';
 
@@ -64,7 +69,7 @@ function activateTransient(
   }
 
   commands.addCommand(toggleShowTransientMessage, {
-    label: args => 'Show Transient Message',
+    label: args => 'Show Transient Messages',
     execute: args => {
       let current = getCurrent(args);
       if (!current) {
@@ -78,14 +83,16 @@ function activateTransient(
       Private.transientHandlerProperty.get(tracker.currentWidget.console).enabled,
     isEnabled: () =>
       tracker.currentWidget !== null &&
-      tracker.currentWidget === app.shell.currentWidget
+      tracker.currentWidget === shell.currentWidget
   });
 
-  palette.addItem({
-    command: toggleShowTransientMessage,
-    category,
-    args: { isPalette: true }
-  });
+  if (palette) {
+    palette.addItem({
+      command: toggleShowTransientMessage,
+      category,
+      args: { isPalette: true }
+    });
+  }
 
   app.contextMenu.addItem({
     command: toggleShowTransientMessage,
