@@ -1,19 +1,61 @@
-# transient-message
+# `transient-display-data` for Jupyter Lab
 
-An extension that allows kernels to send [`transient_display_data` messages
-type](https://github.com/jupyter/jupyter_client/issues/378) (under review)
-to be displayed **not in notebooks**, but in associated console windows of notebooks. In particular,
+This is a JupyterLab extension that allows JupyterLab to receive messages in a new
+[`transient_display_data` type](https://github.com/jupyter/jupyter_client/issues/378)
+and display them in the console window of the associted notebook.
 
-1. kernels can send `transient_display_data` during the evaluation of the
-  cells. Typical examples of such messages include debug information and
-  progress information that are meant to be informative (for long
-  computations) but not saved in the notebook.
+As summarized [here](https://github.com/jupyter/jupyter_client/pull/378#issuecomment-386760939),
+the transient display data messages are designed to send messages that are transient
+in nature and will not be displayed and saved with the notebooks. Such messages
+include but not limited to status or progress information for long calculations, and
+debug information. This message type is identical to `display_data` in content so you
+only need to use message type `transient_display_data` instead of `display_data` to
+mark the message as traisient.
 
-2. The message has the same format as `display_data`, which essentially has
-  a `data` field with MIME content (e.g. `text/plain` or `text/html`).
+This new message type is currently under review. However, even before it is officially
+accepted, kernels can send messages of this type safely because all Jupyter clients
+ignore messages of unknown types, and JupyterLab with this extension will be able to
+display them. An an example, the [SoS Kernel](https://github.com/vatlab/sos-notebook)
+uses this message type to send progress information during the execution of the
+[SoS workflows](https://github.com/vatlab/SoS).
 
-3. JLab (and other frontend) will simple ignore this message type.
+## How to install
 
-4. With this extension, the messages will be displayed in the console
-   window of notebooks. A menu item "Show Transient Message" can be used
-   to disable the display of such messages.
+This extension is only supported by JupyterLab 1.0.0-alpha3 so you will need to have the alpha
+version of JupyterLab installed. To install the `transient-display-data` extension, you can go
+to the extension manager, search for `transient-display-data`, and install.
+
+## How to use `transient_display_data`
+
+After you installed this extention, you can test it by
+
+1. Create a notebook with Python 3 kernel
+2. Right click and select `New Console for Notebook` to create a console window
+3. Right click on the console window and you select `Show Transient Message`.
+4. In the Python notebook, enter
+
+```
+kernel = get_ipython().kernel
+kernel.send_response(kernel.iopub_socket,
+                     'transient_display_data',
+                     {
+                         'data': {
+                             'text/plain': 'I am transient'
+                         }
+                     }
+                    );
+```
+and a message `I am transient` should be displayed in the console window.
+
+5. If you are interested in trying [SoS Notebook](https://vatlab.github.io/sos-docs/), you can click
+[this link](http://128.135.144.117:8000/hub/user-redirect/lab) to start
+a JupyterLab session on our live server. You can create a new notebook
+with SoS kernel, open a console window, and execute for example a trivial workflow
+
+```
+%run
+[1]
+[2]
+[3]
+```
+You can see progress messages in the console window.
