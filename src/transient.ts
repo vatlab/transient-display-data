@@ -127,7 +127,7 @@ export class TransientHandler implements IDisposable {
     return cell;
   }
 
-  private _enabled = false;
+  private _enabled = true;
   private _parent: TransientHandler.IReceiver;
   private _isDisposed = false;
 }
