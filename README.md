@@ -10,7 +10,7 @@ in nature and will not be displayed and saved with the notebooks. Such messages
 include but not limited to status or progress information for long calculations, and
 debug information. This message type is identical to `display_data` in content so you
 only need to use message type `transient_display_data` instead of `display_data` to
-mark the message as traisient.
+mark the message as transient.
 
 This new message type is currently under review. However, even before it is officially
 accepted, kernels can send messages of this type safely because all Jupyter clients
