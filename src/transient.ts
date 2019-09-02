@@ -97,8 +97,8 @@ export class TransientHandler implements IDisposable {
     if (session === kernel.clientId) {
       return false;
     }
-    let msgType = msg.header.msg_type;
-    if (msgType != 'transient_display_data') {
+    let msgType = msg.header.msg_type as string;
+    if (msgType !== 'transient_display_data') {
       return false;
     }
     let parentHeader = msg.parent_header as KernelMessage.IHeader;
