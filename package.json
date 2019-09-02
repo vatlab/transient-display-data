@@ -1,6 +1,6 @@
 {
   "name": "transient-display-data",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Extension to display transient_display_data in Jupyter Lab",
   "keywords": [
     "jupyter",
