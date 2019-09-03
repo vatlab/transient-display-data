@@ -1,3 +1,6 @@
+[![npm version](https://badge.fury.io/js/transient-display-data.svg)](https://badge.fury.io/js/transient-display-data)
+[![Anaconda-Server Badge](https://anaconda.org/conda-forge/jupyterlab-transient-display-data/badges/version.svg)](https://anaconda.org/conda-forge/jupyterlab-transient-display-data)
+
 # `transient-display-data` for Jupyter Lab
 
 This is a JupyterLab extension that allows JupyterLab to receive messages in a new
