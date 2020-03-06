@@ -18,9 +18,9 @@ import {
     TransientHandler
 } from './transient';
 
-import { AttachedProperty } from '@phosphor/properties';
+import { AttachedProperty } from '@lumino/properties';
 
-import { ReadonlyJSONObject } from '@phosphor/coreutils';
+import { ReadonlyJSONObject } from '@lumino/coreutils';
 
 /**
  * The console widget tracker provider.
@@ -45,7 +45,7 @@ function activateTransient(
     const console = panel.console;
 
     const handler = new TransientHandler({
-      session: console.session,
+      sessionContext: console.sessionContext,
       parent: console
     });
     Private.transientHandlerProperty.set(console, handler);

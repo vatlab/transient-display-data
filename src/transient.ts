@@ -1,17 +1,17 @@
 // Copyright (c) Jupyter Development Team.
 // Distributed under the terms of the Modified BSD License.
 
-import { IClientSession } from '@jupyterlab/apputils';
+import { ISessionContext } from '@jupyterlab/apputils';
 
 import { CodeCell } from '@jupyterlab/cells';
 
-import { nbformat } from '@jupyterlab/coreutils';
+import * as nbformat from '@jupyterlab/nbformat';
 
 import { KernelMessage } from '@jupyterlab/services';
 
-import { IDisposable } from '@phosphor/disposable';
+import { IDisposable } from '@lumino/disposable';
 
-import { Signal } from '@phosphor/signaling';
+import { Signal } from '@lumino/signaling';
 
 const TRANSIENT_CELL_CLASS = 'jp-CodeConsole-transientCell';
 
@@ -24,8 +24,8 @@ export class TransientHandler implements IDisposable {
    * Construct a new transient message handler.
    */
   constructor(options: TransientHandler.IOptions) {
-    this.session = options.session;
-    this.session.iopubMessage.connect(
+    this.sessionContext = options.sessionContext;
+    this.sessionContext.iopubMessage.connect(
       this.onIOPubMessage,
       this
     );
@@ -43,9 +43,9 @@ export class TransientHandler implements IDisposable {
   }
 
   /**
-   * The client session used by the transient handler.
+   * The client session used by the foreign handler.
    */
-  readonly session: IClientSession;
+  readonly sessionContext: ISessionContext;
 
   /**
    * The transient handler's parent receiver.
@@ -79,14 +79,14 @@ export class TransientHandler implements IDisposable {
    * previously injected cell being updated and `false` for all other messages.
    */
   protected onIOPubMessage(
-    sender: IClientSession,
+    sender: ISessionContext,
     msg: KernelMessage.IIOPubMessage
   ): boolean {
     // Only process messages if Transient cell injection is enabled.
     if (!this._enabled) {
       return false;
     }
-    let kernel = this.session.kernel;
+    let kernel = this.sessionContext.session?.kernel;
     if (!kernel) {
       return false;
     }
@@ -143,7 +143,7 @@ export namespace TransientHandler {
     /**
      * The client session used by the transient handler.
      */
-    session: IClientSession;
+    sessionContext: ISessionContext;
 
     /**
      * The parent into which the handler will inject code cells.
@@ -173,6 +173,6 @@ export namespace TransientHandler {
     /**
      * Get a cell associated with a message id.
      */
-    getCell(msgId: string): CodeCell;
+    getCell(msgId: string): CodeCell | undefined;
   }
 }
