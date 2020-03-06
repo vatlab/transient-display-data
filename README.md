@@ -1,3 +1,6 @@
+[![npm version](https://badge.fury.io/js/transient-display-data.svg)](https://badge.fury.io/js/transient-display-data)
+[![Anaconda-Server Badge](https://anaconda.org/conda-forge/jupyterlab-transient-display-data/badges/version.svg)](https://anaconda.org/conda-forge/jupyterlab-transient-display-data)
+
 # `transient-display-data` for Jupyter Lab
 
 This is a JupyterLab extension that allows JupyterLab to receive messages in a new
@@ -21,9 +24,15 @@ uses this message type to send progress information during the execution of the
 
 ## How to install
 
-This extension is only supported by JupyterLab 1.0.0-alpha3 so you will need to have the alpha
-version of JupyterLab installed. To install the `transient-display-data` extension, you can go
-to the extension manager, search for `transient-display-data`, and install.
+* If you are using conda version of JupyterLab, you can install this extension with command
+  ```bash
+  conda install jupyterlab-transient-display-data -c conda-forge
+  ```
+* Otherwise you can install the `transient-display-data` extension using command
+  ```bash
+  jupyter labextension install transient-display-data
+  ```
+  or go to the extension manager, search for `transient-display-data`, and install.
 
 ## How to use `transient_display_data`
 
