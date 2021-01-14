@@ -1,6 +1,6 @@
 {
   "name": "transient-display-data",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Extension to display transient_display_data in Jupyter Lab",
   "keywords": [
     "jupyter",
@@ -26,22 +26,21 @@
   },
   "scripts": {
     "build": "jlpm run build:lib && jlpm run build:labextension:dev",
+    "build:prod": "jlpm run build:lib && jlpm run build:labextension",
     "build:labextension": "jupyter labextension build .",
     "build:labextension:dev": "jupyter labextension build --development True .",
     "build:lib": "tsc",
-    "build:prod": "jlpm run build:lib && jlpm run build:labextension",
     "clean": "jlpm run clean:lib",
-    "clean:all": "jlpm run clean:lib && jlpm run clean:labextension",
-    "clean:labextension": "rimraf transient-display-data/labextension",
     "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
+    "clean:labextension": "rimraf transient-display-data/labextension",
+    "clean:all": "jlpm run clean:lib && jlpm run clean:labextension",
     "eslint": "eslint . --ext .ts,.tsx --fix",
     "eslint:check": "eslint . --ext .ts,.tsx",
     "install:extension": "jupyter labextension develop --overwrite .",
     "prepare": "jlpm run clean && jlpm run build:prod",
-    "prepublishOnly": "npm run build",
     "watch": "run-p watch:src watch:labextension",
-    "watch:labextension": "jupyter labextension watch .",
-    "watch:src": "tsc -w"
+    "watch:src": "tsc -w",
+    "watch:labextension": "jupyter labextension watch ."
   },
   "dependencies": {
     "@jupyterlab/application": "^3.0.2",
@@ -50,6 +49,7 @@
     "@jupyterlab/codeeditor": "^3.0.2",
     "@jupyterlab/console": "^3.0.2",
     "@jupyterlab/coreutils": "^5.0.1",
+    "@jupyterlab/filebrowser": "^3.0.3",
     "@jupyterlab/nbformat": "^3.0.1",
     "@jupyterlab/observables": "^4.0.1",
     "@jupyterlab/rendermime": "^3.0.2",
@@ -64,7 +64,7 @@
     "@lumino/widgets": "^1.16.1"
   },
   "devDependencies": {
-    "@jupyterlab/builder": "^3.0.0-rc.13",
+    "@jupyterlab/builder": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^2.27.0",
     "@typescript-eslint/parser": "^2.27.0",
     "eslint": "^7.5.0",
