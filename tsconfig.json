@@ -12,13 +12,12 @@
     "noImplicitAny": true,
     "noUnusedLocals": true,
     "preserveWatchOutput": true,
+    "resolveJsonModule": true,
     "outDir": "lib",
     "rootDir": "src",
-    "resolveJsonModule": true,
-    "sourceMap": true,
+    "strict": false,
     "strictNullChecks": true,
-    "target": "es2017",
-    "types": []
+    "target": "ES2018"
   },
   "include": ["src/*"]
 }
